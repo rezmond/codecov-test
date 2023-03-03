@@ -4,10 +4,16 @@ const { get } = require('./get');
 const addToPossibleArray = (arr, item) =>
   (arr ?? []).concat(item)
 
+const getIteratee = (iteratee) => {
+  if (typeof iteratee !== 'string') {
+    return iteratee;
+  }
+
+  return (item) => get(item, iteratee);
+}
+
 exports.groupBy = (collection, iteratee = identity) => {
-  const finalIteratee = typeof iteratee !== 'string' ?
-  iteratee:
-  (item) => get(item, iteratee);
+  const finalIteratee = getIteratee(iteratee);
 
   const reduceItem = (acc, item) => {
     const key = finalIteratee(item);
